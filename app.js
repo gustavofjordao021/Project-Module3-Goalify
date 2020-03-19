@@ -7,7 +7,6 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 
-
 mongoose
   .connect('mongodb://localhost/project-module3-goalify', {
     useCreateIndex: true,
@@ -33,8 +32,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-const index = require('./routes/index');
-app.use('/', index);
+// Route setup
+app.use('/', require('./routes/index'));
+app.use('/auth', require('./routes/auth'));
 
 
 module.exports = app;
