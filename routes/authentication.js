@@ -21,11 +21,11 @@ router.post('/signup', (req, res, next) => {
     return;
   }
 
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
   if (!regex.test(password)) {
     res.status(500).json({
       message:
-        'Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.'
+        'Password needs to have at least 8 characters, and must contain at least one number, one lowercase and one uppercase letter.'
     });
     return;
   }
@@ -40,8 +40,6 @@ router.post('/signup', (req, res, next) => {
         passwordHash: hashedPassword
       })
         .then(user => {
-          // user.passwordHash = undefined;
-          // res.status(200).json({ user });
           req.login(user, err => {
             if (err) return res.status(500).json({ message: 'Something went wrong with login!' });
             user.passwordHash = undefined;
