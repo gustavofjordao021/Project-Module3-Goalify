@@ -18,7 +18,25 @@ const userSchema = new Schema(
     },
     passwordHash: {
       type: String,
-      required: [true, 'Password is required.']
+      required: [true, 'Password is required.'],
+      trim: true
+    },
+    avatar: {
+      type: String,
+      default:
+        "https://cl.goliath.com/image/upload/t_tn,f_auto,q_auto,$h_480,$w_895/go/2020/01/baby-yoda-life-size-figure-584x600-895x480.jpg"
+    },
+    goals: {
+      type: {
+        type: Schema.Types.ObjectId,
+        ref: "Goal"
+      }
+    },
+    actions: {
+      type: {
+        type: Schema.Types.ObjectId,
+        ref: "Action"
+      }
     }
   },
   {
