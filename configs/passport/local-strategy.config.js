@@ -9,10 +9,10 @@ passport.use(
   'local',
   new LocalStrategy(
     {
-      usernameField: 'email'
+      usernameField: 'username'
     },
-    (email, password, next) => {
-      User.findOne({ email })
+    (username, password, next) => {
+      User.findOne({ username })
         .then(userFromDB => {
           if (!userFromDB) {
             return next(null, false, { message: 'Incorrect email' });
