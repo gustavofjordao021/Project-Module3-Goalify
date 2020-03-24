@@ -59,7 +59,7 @@ router.post('/signup', (req, res, next) => {
     .catch(err => next(err));
 });
 
-router.post('/login', routeGuard, (req, res, next) => {
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, failureDetails) => {
     if (err) {
       res.status(500).json({ message: 'Something went wrong with database query.' });
@@ -74,7 +74,7 @@ router.post('/login', routeGuard, (req, res, next) => {
       user.passwordHash = undefined;
       res.status(200).json({ message: 'Login successful!', user });
     });
-  })(req, res, next);
+  });
 });
 
 router.post('/logout', routeGuard, (req, res, next) => {

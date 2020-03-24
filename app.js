@@ -20,11 +20,12 @@ app.use(cookieParser());
 
 require('./configs/db.config');
 require('./configs/session.config')(app);
-require('./configs/passport/passport.config.js')(app);
+require('./configs/passport/passport.config.js')(app);  
 
 // Route setup
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
+app.use('/home', require('./routes/home'));
 
 
 module.exports = app;
