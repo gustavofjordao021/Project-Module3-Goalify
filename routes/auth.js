@@ -19,11 +19,11 @@ router.post('/signup', (req, res, next) => {
     return;
   }
 
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
   if (!regex.test(password)) {
     res.status(500).json({
       message:
-        'Password needs to have at least 6 characters, and must contain at least one number, one lowercase and one uppercase letter.'
+        'Password needs to have at least 8 characters, and must contain at least one number, one lowercase and one uppercase letter.'
     });
     return;
   }
@@ -59,22 +59,26 @@ router.post('/signup', (req, res, next) => {
     .catch(err => next(err));
 });
 
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, failureDetails) => {
+router.post("/login", (req, res, next) => {
+  console.log("here");
+  passport.authenticate("local", (err, user, failureDetails) => {
     if (err) {
-      res.status(500).json({ message: 'Something went wrong with database query.' });
+      res
+        .status(500)
+        .json({ message: "Something went wrong with database query" });
     }
-
     if (!user) {
       res.status(401).json(failureDetails);
     }
-
     req.login(user, err => {
-      if (err) return res.status(500).json({ message: 'Something went wrong with login!' });
+      if (err)
+        return res
+          .status(500)
+          .json({ message: "Something went wrong with login!" });
       user.passwordHash = undefined;
-      res.status(200).json({ message: 'Login successful!', user });
+      res.status(200).json({ message: "Login successful!", user });
     });
-  });
+  })(req, res, next);
 });
 
 router.post('/logout', routeGuard, (req, res, next) => {

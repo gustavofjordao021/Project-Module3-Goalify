@@ -25,7 +25,7 @@ require('./configs/passport/passport.config.js')(app);
 // Route setup
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
-app.use('/home', require('./routes/home'));
+app.use('/app', require('./routes/application'));
 
 
 module.exports = app;
