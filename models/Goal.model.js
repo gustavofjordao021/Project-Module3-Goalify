@@ -8,6 +8,18 @@ const goalSchema = new Schema(
       required: [true, 'Goal name is required.'],
       unique: true
     },
+    goalDescription: {
+      type: String,
+      required: [true, 'Goal description is required']
+    },
+    goalDueDate: {
+      type: Date,
+      required: [true, 'Goal due date is required']
+    },
+    goalTarget: {
+      type: Number,
+      required: [true, 'Goal target is required']
+    },
     goalOwner: {
       type: {
         type: Schema.Types.ObjectId,

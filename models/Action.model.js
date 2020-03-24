@@ -5,7 +5,7 @@ const actionSchema = new Schema(
     actionName: {
       type: String,
       trim: true,
-      required: [true, 'Goal name is required.'],
+      required: [true, 'Action name is required.'],
       unique: true
     },
     actionOwner: {
@@ -18,6 +18,10 @@ const actionSchema = new Schema(
       type: String,
       trim: true,
       required: [true, 'Action description is required']
+    },
+    actionIsComplete: {
+      type: Boolean,
+      default: false      
     }
   },
   {
