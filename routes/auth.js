@@ -3,6 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 const User = require('../models/User.model');
+const Goal = require('../models/Goal.model');
+const Action = require('../models/Action.model');
 
 const bcryptjs = require('bcryptjs');
 const saltRounds = 10;
@@ -84,15 +86,6 @@ router.post("/login", (req, res, next) => {
 router.post('/logout', routeGuard, (req, res, next) => {
   req.logout();
   res.status(200).json({ message: 'Logout successful!' });
-});
-
-router.get('/isLoggedIn', (req, res) => {
-  if (req.user) {
-    req.user.passwordHash = undefined;
-    res.status(200).json({ user: req.user });
-    return;
-  }
-  res.status(401).json({ message: 'You are not logged in!' });
 });
 
 module.exports = router;

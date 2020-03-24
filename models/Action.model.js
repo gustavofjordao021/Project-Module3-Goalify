@@ -18,10 +18,6 @@ const actionSchema = new Schema(
       type: String,
       trim: true,
       required: [true, 'Action description is required']
-    },
-    actionIsComplete: {
-      type: Boolean,
-      default: false      
     }
   },
   {
@@ -29,4 +25,4 @@ const actionSchema = new Schema(
   }
 );
 
-module.exports = model('Goal', actionSchema);
+module.exports = model('Action', actionSchema);
