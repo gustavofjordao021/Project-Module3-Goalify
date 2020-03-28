@@ -24,7 +24,7 @@ require('./configs/session.config')(app);
 require('./configs/passport/passport.config.js')(app);
 
 app.use(cors({
-    origin: 'localhost:3000',
+    origin: process.env.REACT_APP_CLIENT_POINT,
     credentials: true
 }))
 

@@ -95,5 +95,4 @@ router.get('/isLoggedIn', (req, res) => {
   res.status(401).json({ message: 'Unauthorized access!' });
 });
 
-
 module.exports = router;
