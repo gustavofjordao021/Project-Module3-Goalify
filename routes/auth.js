@@ -39,9 +39,9 @@ router.post('/signup', (req, res, next) => {
       })
         .then(user => {
           req.login(user, err => {
-            if (err) return res.status(500).json({ message: 'Something went wrong with login!' });
+            if (err) return res.status(500).json({ errorMessage: 'Something went wrong with login!' });
             user.passwordHash = undefined;
-            res.status(200).json({ message: 'Login successful!', user });
+            res.status(200).json({ successMessage: 'Login successful!', user });
           });
         })
         .catch(err => {
@@ -49,7 +49,7 @@ router.post('/signup', (req, res, next) => {
             res.status(500).json({ message: "test error" });
           } else if (err.code === 11000) {
             res.status(500).json({
-              message: 'Username and email need to be unique. Either username or email is already used.'
+              errorMessage: 'Username and email need to be unique. Either username or email is already used.'
             });
           } else {
             next(err);
@@ -60,24 +60,25 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.post("/login", (req, res, next) => {
-  console.log("here");
   passport.authenticate("local", (err, user, failureDetails) => {
     if (err) {
       res
-        .status(500)
-        .json({ message: "Something went wrong with database query" });
+        .status(200)
+        .json({ errorMessage: "Something went wrong with database query" });
     }
-    if (!user) {
-      res.status(401).json(failureDetails);
+    else if (!user) {
+      res.status(200).json({errorMessage: failureDetails.message});
     }
-    req.login(user, err => {
-      if (err)
-        return res
-          .status(500)
-          .json({ message: "Something went wrong with login!" });
-      user.passwordHash = undefined;
-      res.status(200).json({ message: "Login successful!", user });
-    });
+    else {
+      req.login(user, err => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ errorMessage: "Something went wrong with login!" })}
+        user.passwordHash = undefined;
+        res.status(200).json({successMessag: "Login Successful!", user});
+      });
+    }
   })(req, res, next);
 });
 
