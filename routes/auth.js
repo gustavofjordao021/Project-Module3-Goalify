@@ -14,15 +14,15 @@ router.post('/signup', (req, res, next) => {
 
   if (!username || !email || !password) {
     res.status(401).json({
-      message: 'All fields are mandatory. Please provide your username, email and password.'
+      errorMessage: 'All fields are mandatory. Please provide your username, email and password.'
     });
     return;
   }
 
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
   if (!regex.test(password)) {
-    res.status(500).json({
-      message:
+    res.json({
+      errorMessage:
         'Password needs to have at least 8 characters, and must contain at least one number, one lowercase and one uppercase letter.'
     });
     return;
@@ -39,16 +39,16 @@ router.post('/signup', (req, res, next) => {
       })
         .then(user => {
           req.login(user, err => {
-            if (err) return res.status(500).json({ errorMessage: 'Something went wrong with login!' });
+            if (err) return res.json({ errorMessage: 'Something went wrong with login!' });
             user.passwordHash = undefined;
-            res.status(200).json({ successMessage: 'Login successful!', user });
+            res.json({ successMessage: 'Login successful!', user });
           });
         })
         .catch(err => {
           if (err instanceof mongoose.Error.ValidationError) {
-            res.status(500).json({ message: "test error" });
+            res.json({ errorMessage: "test error" });
           } else if (err.code === 11000) {
-            res.status(500).json({
+            res.json({
               errorMessage: 'Username and email need to be unique. Either username or email is already used.'
             });
           } else {
@@ -73,7 +73,6 @@ router.post("/login", (req, res, next) => {
       req.login(user, err => {
         if (err) {
           return res
-            .status(500)
             .json({ errorMessage: "Something went wrong with login!" })}
         user.passwordHash = undefined;
         res.status(200).json({successMessag: "Login Successful!", user});
@@ -93,7 +92,7 @@ router.get('/isLoggedIn', (req, res) => {
     res.status(200).json({ user: req.user });
     return;
   }
-  res.status(401).json({ message: 'Unauthorized access!' });
+  res.status(401).json({ errorMessage: 'Unauthorized access!' });
 });
 
 module.exports = router;
