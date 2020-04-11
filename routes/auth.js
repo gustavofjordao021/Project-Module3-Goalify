@@ -75,7 +75,7 @@ router.post("/login", (req, res, next) => {
           return res
             .json({ errorMessage: "Something went wrong with login!" })}
         user.passwordHash = undefined;
-        res.status(200).json({successMessag: "Login Successful!", user});
+        res.status(200).json({successMessage: "Login Successful!", user});
       });
     }
   })(req, res, next);
