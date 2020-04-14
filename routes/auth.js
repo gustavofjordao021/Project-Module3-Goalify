@@ -81,7 +81,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', routeGuard, (req, res, next) => {
+router.post('/logout', (req, res, next) => {
   req.logout();
   res.status(200).json({ message: 'Logout successful!' });
 });
@@ -89,10 +89,10 @@ router.post('/logout', routeGuard, (req, res, next) => {
 router.get('/isLoggedIn', (req, res) => {
   if (req.user) {
     req.user.passwordHash = undefined;
-    res.status(200).json({ user: req.user });
+    res.json({ user: req.user });
     return;
   }
-  res.status(401).json({ errorMessage: 'Unauthorized access!' });
+  res.json({ errorMessage: 'Unauthorized access!' });
 });
 
 module.exports = router;
