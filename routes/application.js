@@ -1,48 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
 const User = require('../models/User.model');
 const Goal = require('../models/Goal.model');
 const Action = require('../models/Action.model');
 
 const routeGuard = require('../configs/route-guard.config');
 
-// GET App homepage
-router.get('/', routeGuard, (req, res, next) => {
-  User.findById(req.user._id)
-    .populate('goals')
-    .populate('actions')
-    .then(currentUser => {
-      res.status(200).json(currentUser)
-    })
-    .catch(err => res.status(500).json(err));
-});
-
-// GET App homepage
-router.get('/', routeGuard, (req, res, next) => {
-  User.findById(req.user._id)
-    .populate('goals')
-    .populate('actions')
-    .then(currentUser => {
-      res.status(200).json(currentUser)
-    })
-    .catch(err => res.status(500).json(err));
-});
-
 // POST Create a goal
 router.post('/create-goal', routeGuard, (req, res, next) => {
-  const { goalName, goalDescription, goalDueDate, goalTarget } = req.body;
+  const { goalName, goalDescription, goalDueDate, goalTarget, goalOwner } = req.body;
   Goal.create({
     goalName, 
     goalDescription, 
     goalDueDate, 
     goalTarget,
-    goalOwner: req.user._id
+    goalOwner
   })
   .then(newGoal => {
-    res.status(200).json(newGoal)
+    res.status(200).json({
+      successMessage: 'Goal successfully created!'
+    })
+    User.findByIdAndUpdate(
+      goalOwner,
+      {$push: { goals: newGoal._id }},
+      {new: true})
   })
-  .catch(err => res.status(500).json(err));
+  .catch(errorMessage => console.log(errorMessage));
 })
 
 // GET Open goal details
