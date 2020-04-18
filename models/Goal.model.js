@@ -21,10 +21,7 @@ const goalSchema = new Schema(
       required: [true, 'Goal target is required']
     },
     goalOwner: {
-      type: {
-        type: Schema.Types.ObjectId,
-        ref: "User"
-      }
+      type: String
     },
     goalActions: {
       type: {
