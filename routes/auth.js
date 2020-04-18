@@ -89,20 +89,12 @@ router.post("/logout", (req, res, next) => {
   res.status(200).json({ message: "Logout successful!" });
 });
 
-// router.get("/isLoggedIn", (req, res) => {
-//   if (req.user) {
-//     req.user.passwordHash = undefined;
-//     res.json({ user: req.user });
-//     return;
-//   }
-//   res.json({ errorMessage: "Unauthorized access!" });
-
 router.get("/isLoggedIn", (req, res) => {
   if (req.user) {
     User.findById(req.user._id)
+      .populate("goals")
       .then((userFound) => {
         req.user.passwordHash = undefined;
-        console.log(userFound);
         res.json({ user: userFound });
         return;
       })

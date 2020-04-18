@@ -23,14 +23,16 @@ router.post("/create-goal", routeGuard, (req, res, next) => {
     goalOwner,
   })
     .then((newGoal) => {
-      console.log(newGoal);
       User.findByIdAndUpdate(
         newGoal.goalOwner,
         { $push: { goals: newGoal._id } },
         { new: true }
-      ).then((updatedUser) => {
-        res.status(200).json({ currentUser: updatedUser });
-      });
+      )
+        .populate("goals")
+        .then((updatedUser) => {
+          console.log(updatedUser);
+          res.status(200).json({ currentUser: updatedUser });
+        });
     })
     .catch((errorMessage) => console.log(errorMessage));
 });
