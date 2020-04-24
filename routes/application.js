@@ -40,6 +40,7 @@ router.post("/create-goal", routeGuard, (req, res, next) => {
 // GET Open goal details
 router.get("/:goalId", routeGuard, (req, res, next) => {
   Goal.findById(req.params.goalId)
+    .populate("goalOwner")
     .populate("actions")
     .then((currentGoal) => {
       res.status(200).json(currentGoal);
