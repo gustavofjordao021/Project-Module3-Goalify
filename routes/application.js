@@ -38,12 +38,12 @@ router.post("/create-goal", routeGuard, (req, res, next) => {
 });
 
 // GET Open goal details
-router.get("/:goalId", routeGuard, (req, res, next) => {
-  Goal.findById(req.params.goalId)
+router.get("/all-goals", routeGuard, (req, res, next) => {
+  Goal.find()
     .populate("goalOwner")
     .populate("actions")
-    .then((currentGoal) => {
-      res.status(200).json(currentGoal);
+    .then((allGoals) => {
+      res.status(200).json(allGoals);
     })
     .catch((err) => res.status(500).json(err));
 });
