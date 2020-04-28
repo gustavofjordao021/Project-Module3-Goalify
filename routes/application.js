@@ -41,6 +41,24 @@ router.get("/all-goals", routeGuard, (req, res, next) => {
     .catch((err) => res.status(500).json(err));
 });
 
+// // POST Update goal details
+// router.post("/:goalId/update", routeGuard, (req, res, next) => {
+//   const { goalName, goalDueDate, goalTarget } = req.body;
+//   Goal.findByIdAndUpdate(
+//     req.params.goalId,
+//     {
+//       goalName,
+//       goalDueDate,
+//       goalTarget,
+//     },
+//     { new: true }
+//   )
+//     .then((updatedGoal) => {
+//       res.status(200).json(updatedGoal);
+//     })
+//     .catch((err) => res.status(500).json(err));
+// });
+
 // POST Update goal details
 router.post("/:goalId/update", routeGuard, (req, res, next) => {
   const { goalName, goalDueDate, goalTarget } = req.body;
@@ -54,7 +72,13 @@ router.post("/:goalId/update", routeGuard, (req, res, next) => {
     { new: true }
   )
     .then((updatedGoal) => {
-      res.status(200).json(updatedGoal);
+      User.findById(updatedGoal.goalOwner)
+        .populate("goals")
+        .populate("actions")
+        .then((userFound) => {
+          res.status(200).json(userFound);
+        })
+        .catch((err) => res.status(500).json(err));
     })
     .catch((err) => res.status(500).json(err));
 });
