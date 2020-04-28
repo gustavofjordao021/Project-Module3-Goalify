@@ -8,16 +8,9 @@ const routeGuard = require("../configs/route-guard.config");
 
 // POST Create a goal
 router.post("/create-goal", routeGuard, (req, res, next) => {
-  const {
-    goalName,
-    goalDescription,
-    goalDueDate,
-    goalTarget,
-    goalOwner,
-  } = req.body;
+  const { goalName, goalDueDate, goalTarget, goalOwner } = req.body;
   Goal.create({
     goalName,
-    goalDescription,
     goalDueDate,
     goalTarget,
     goalOwner,
@@ -50,12 +43,11 @@ router.get("/all-goals", routeGuard, (req, res, next) => {
 
 // POST Update goal details
 router.post("/:goalId/update", routeGuard, (req, res, next) => {
-  const { goalName, goalDescription, goalDueDate, goalTarget } = req.body;
+  const { goalName, goalDueDate, goalTarget } = req.body;
   Goal.findByIdAndUpdate(
     req.params.goalId,
     {
       goalName,
-      goalDescription,
       goalDueDate,
       goalTarget,
     },
