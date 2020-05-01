@@ -41,24 +41,6 @@ router.get("/all-goals", routeGuard, (req, res, next) => {
     .catch((err) => res.status(500).json(err));
 });
 
-// // POST Update goal details
-// router.post("/:goalId/update", routeGuard, (req, res, next) => {
-//   const { goalName, goalDueDate, goalTarget } = req.body;
-//   Goal.findByIdAndUpdate(
-//     req.params.goalId,
-//     {
-//       goalName,
-//       goalDueDate,
-//       goalTarget,
-//     },
-//     { new: true }
-//   )
-//     .then((updatedGoal) => {
-//       res.status(200).json(updatedGoal);
-//     })
-//     .catch((err) => res.status(500).json(err));
-// });
-
 // POST Update goal details
 router.post("/:goalId/update", routeGuard, (req, res, next) => {
   const { goalName, goalDueDate, goalTarget } = req.body;
