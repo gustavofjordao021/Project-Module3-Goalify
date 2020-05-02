@@ -23,7 +23,6 @@ router.post("/create-goal", routeGuard, (req, res, next) => {
       )
         .populate("goals")
         .then((updatedUser) => {
-          console.log(updatedUser);
           res.status(200).json({ currentUser: updatedUser });
         });
     })
@@ -75,7 +74,7 @@ router.post("/:goalId/delete", routeGuard, (req, res, next) => {
         { new: true }
       )
         .then((updatedUser) => {
-          res.status(200).json(updatedUser);
+          res.status(200).json({ currentUser: updatedUser });
         })
         .catch((err) => res.status(500).json(err));
     })
