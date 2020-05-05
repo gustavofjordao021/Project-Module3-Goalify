@@ -21,7 +21,14 @@ router.post("/create-goal", routeGuard, (req, res, next) => {
         { $push: { goals: newGoal._id } },
         { new: true }
       )
-        .populate("goals")
+        .populate({
+          path: "goals",
+          model: "Goal",
+          populate: {
+            path: "goalActions",
+            model: "Action",
+          },
+        })
         .then((updatedUser) => {
           res.status(200).json({ currentUser: updatedUser });
         });
@@ -32,8 +39,8 @@ router.post("/create-goal", routeGuard, (req, res, next) => {
 // GET Open goal details
 router.get("/all-goals", routeGuard, (req, res, next) => {
   Goal.find()
+    .populate("goalActions")
     .populate("goalOwner")
-    .populate("actions")
     .then((allGoals) => {
       res.status(200).json(allGoals);
     })
@@ -52,10 +59,17 @@ router.post("/:goalId/update", routeGuard, (req, res, next) => {
     },
     { new: true }
   )
+    .populate("goalActions")
     .then((updatedGoal) => {
       User.findById(updatedGoal.goalOwner)
-        .populate("goals")
-        .populate("actions")
+        .populate({
+          path: "goals",
+          model: "Goal",
+          populate: {
+            path: "goalActions",
+            model: "Action",
+          },
+        })
         .then((userFound) => {
           res.status(200).json(userFound);
         })
@@ -95,12 +109,24 @@ router.post("/:goalId/new-action", routeGuard, (req, res, next) => {
         { $push: { goalActions: actionCreated._id } },
         { new: true }
       )
+        .populate("goalActions")
         .then((updatedGoal) => {
-          res.status(200).json(updatedGoal);
+          User.findById(updatedGoal.goalOwner)
+            .populate({
+              path: "goals",
+              model: "Goal",
+              populate: {
+                path: "goalActions",
+                model: "Action",
+              },
+            })
+            .then((updatedUser) => {
+              res.status(200).json({ updatedUser });
+            });
         })
-        .catch((err) => res.status(500).json(err));
+        .catch((err) => console.log("Error 1: ", err));
     })
-    .catch((err) => res.status(500).json(err));
+    .catch((err) => console.log("Error 2: ", err));
 });
 
 // POST Update an action

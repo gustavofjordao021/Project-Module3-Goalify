@@ -32,12 +32,12 @@ const userSchema = new Schema(
         ref: "Goal",
       },
     ],
-    actions: {
-      type: {
+    actions: [
+      {
         type: Schema.Types.ObjectId,
         ref: "Action",
       },
-    },
+    ],
   },
   {
     timestamps: true,
