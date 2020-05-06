@@ -9,10 +9,7 @@ const actionSchema = new Schema(
       unique: true,
     },
     actionOwner: {
-      type: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
+      type: String,
     },
     actionDescription: {
       type: String,

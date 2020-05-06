@@ -97,10 +97,10 @@ router.post("/:goalId/delete", routeGuard, (req, res, next) => {
 
 // POST Create an action
 router.post("/:goalId/new-action", routeGuard, (req, res, next) => {
-  const { actionName, actionDescription } = req.body;
+  const { actionName, actionDescription, actionOwner } = req.body.actionData;
   Action.create({
     actionName,
-    actionOwner: req.user._id,
+    actionOwner,
     actionDescription,
   })
     .then((actionCreated) => {
@@ -140,6 +140,29 @@ router.post("/:goalId/:actionId/update", routeGuard, (req, res, next) => {
       res.status(200).json(actionUpdated);
     })
     .catch((err) => res.status(500).json(err));
+});
+
+router.post("/:goalId/:actionId/is-done", routeGuard, (req, res, next) => {
+  Action.findByIdAndUpdate(
+    req.params.actionId,
+    { isDone: "true" },
+    { new: true }
+  )
+    .then((actionDone) => {
+      User.findById(actionDone.actionOwner)
+        .populate({
+          path: "goals",
+          model: "Goal",
+          populate: {
+            path: "goalActions",
+            model: "Action",
+          },
+        })
+        .then((updatedUser) => {
+          res.status(200).json({ updatedUser });
+        });
+    })
+    .catch((err) => console.log("Error 1: ", err));
 });
 
 // POST Delete an action
