@@ -166,7 +166,7 @@ router.post("/:goalId/:actionId/is-done", routeGuard, (req, res, next) => {
 });
 
 // POST Delete an action
-router.post("/:goalId/:actionId/update", routeGuard, (req, res, next) => {
+router.post("/:goalId/:actionId/delete", routeGuard, (req, res, next) => {
   Action.findByIdAndDelete(req.params.actionId)
     .then((actionDeleted) => {
       Goal.findByIdAndUpdate(
