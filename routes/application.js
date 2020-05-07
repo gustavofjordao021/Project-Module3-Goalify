@@ -188,19 +188,28 @@ router.post("/:goalId/:actionId/is-done", routeGuard, (req, res, next) => {
 
 // POST Delete an action
 router.post("/:goalId/:actionId/delete", routeGuard, (req, res, next) => {
-  Action.findByIdAndDelete(req.params.actionId)
-    .then((actionDeleted) => {
-      Goal.findByIdAndUpdate(
-        req.params.goalId,
-        { $pull: { goalActions: actionDeleted._id } },
-        { new: true }
-      )
-        .then((updatedGoal) => {
-          res.status(200).json(updatedGoal);
-        })
-        .catch((err) => res.status(500).json(err));
-    })
-    .catch((err) => res.status(500).json(err));
+  Action.findByIdAndDelete(req.params.actionId).then((actionDeleted) => {
+    Goal.findByIdAndUpdate(
+      req.params.goalId,
+      { $pull: { goalActions: actionDeleted._id } },
+      { new: true }
+    )
+      .then((updatedGoal) => {
+        User.findById(updatedGoal.goalOwner)
+          .populate({
+            path: "goals",
+            model: "Goal",
+            populate: {
+              path: "goalActions",
+              model: "Action",
+            },
+          })
+          .then((updatedUser) => {
+            res.status(200).json(updatedUser);
+          });
+      })
+      .catch((err) => res.status(500).json(err));
+  });
 });
 
 module.exports = router;

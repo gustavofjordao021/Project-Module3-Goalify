@@ -6,7 +6,6 @@ const actionSchema = new Schema(
       type: String,
       trim: true,
       required: [true, "Action name is required."],
-      unique: true,
     },
     actionOwner: {
       type: String,
