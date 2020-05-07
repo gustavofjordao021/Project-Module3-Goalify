@@ -131,15 +131,36 @@ router.post("/:goalId/new-action", routeGuard, (req, res, next) => {
 
 // POST Update an action
 router.post("/:goalId/:actionId/update", routeGuard, (req, res, next) => {
-  const { actionName, actionDescription } = req.body;
-  Action.findByIdAndUpdate({
-    actionName,
-    actionDescription,
-  })
-    .then((actionUpdated) => {
-      res.status(200).json(actionUpdated);
+  const { actionName, actionDescription, actionOwner, actionId } = req.body;
+  Action.findByIdAndUpdate(
+    actionId,
+    {
+      actionName,
+      actionDescription,
+      actionOwner,
+    },
+    { new: true }
+  )
+    .then(() => {
+      Goal.findByIdAndUpdate(req.params.goalId, { new: true })
+        .populate("goalActions")
+        .then((updatedGoal) => {
+          User.findById(updatedGoal.goalOwner)
+            .populate({
+              path: "goals",
+              model: "Goal",
+              populate: {
+                path: "goalActions",
+                model: "Action",
+              },
+            })
+            .then((updatedUser) => {
+              res.status(200).json({ updatedUser });
+            });
+        })
+        .catch((err) => console.log("Error 1: ", err));
     })
-    .catch((err) => res.status(500).json(err));
+    .catch((err) => console.log("Error 2: ", err));
 });
 
 router.post("/:goalId/:actionId/is-done", routeGuard, (req, res, next) => {
