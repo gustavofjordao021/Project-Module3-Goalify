@@ -107,6 +107,8 @@ router.get("/isLoggedIn", (req, res) => {
         return;
       })
       .catch((err) => res.json({ errorMessage: "Unauthorized access!" }));
+  } else {
+    res.status(403).json({ errorMessage: "Unauthorized access!" });
   }
 });
 
