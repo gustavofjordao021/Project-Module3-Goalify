@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 const User = require("../models/User.model");
+const uploadCloud = require("../configs/cloudinary-setup");
 
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
@@ -10,8 +11,8 @@ const saltRounds = 10;
 const routeGuard = require("../configs/route-guard.config");
 
 router.post("/signup", (req, res, next) => {
-  const { username, email, password } = req.body;
-
+  const { username, email, password, avatar } = req.body;
+  console.log("Body: ", req.body);
   if (!username || !email || !password) {
     res.status(401).json({
       errorMessage:
@@ -36,6 +37,7 @@ router.post("/signup", (req, res, next) => {
       return User.create({
         username,
         email,
+        avatar,
         passwordHash: hashedPassword,
       })
         .then((user) => {
@@ -45,7 +47,7 @@ router.post("/signup", (req, res, next) => {
                 errorMessage: "Something went wrong with login!",
               });
             user.passwordHash = undefined;
-            res.json({ successMessage: "Login successful!", user });
+            res.json({ user });
           });
         })
         .catch((err) => {
@@ -109,6 +111,15 @@ router.get("/isLoggedIn", (req, res) => {
       .catch((err) => res.json({ errorMessage: "Unauthorized access!" }));
   } else {
     res.status(403).json({ errorMessage: "Unauthorized access!" });
+  }
+});
+
+router.post("/avatar-upload", uploadCloud.single("avatar"), (req, res) => {
+  console.log(req.file);
+  if (!req.file) {
+    res.status(500).json({ errorMessage: "There's no file to be uploaded!" });
+  } else {
+    res.status(200).json({ secure_url: req.file.secure_url });
   }
 });
 
