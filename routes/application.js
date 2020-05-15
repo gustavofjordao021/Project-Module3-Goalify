@@ -186,6 +186,29 @@ router.post("/:goalId/:actionId/is-done", routeGuard, (req, res, next) => {
     .catch((err) => console.log("Error 1: ", err));
 });
 
+router.post("/:goalId/:actionId/not-done", routeGuard, (req, res, next) => {
+  Action.findByIdAndUpdate(
+    req.params.actionId,
+    { isDone: "false" },
+    { new: true }
+  )
+    .then((actionDone) => {
+      User.findById(actionDone.actionOwner)
+        .populate({
+          path: "goals",
+          model: "Goal",
+          populate: {
+            path: "goalActions",
+            model: "Action",
+          },
+        })
+        .then((updatedUser) => {
+          res.status(200).json({ updatedUser });
+        });
+    })
+    .catch((err) => console.log("Error 1: ", err));
+});
+
 // POST Delete an action
 router.post("/:goalId/:actionId/delete", routeGuard, (req, res, next) => {
   Action.findByIdAndDelete(req.params.actionId).then((actionDeleted) => {
