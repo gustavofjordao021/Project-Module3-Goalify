@@ -34,6 +34,35 @@ router.post("/signup", (req, res, next) => {
     .genSalt(saltRounds)
     .then((salt) => bcryptjs.hash(password, salt))
     .then((hashedPassword) => {
+      if (!avatar) {
+        return User.create({
+          username,
+          email,
+          passwordHash: hashedPassword,
+        })
+          .then((user) => {
+            req.login(user, (err) => {
+              if (err)
+                return res.json({
+                  errorMessage: "Something went wrong with login!",
+                });
+              user.passwordHash = undefined;
+              res.json({ user });
+            });
+          })
+          .catch((err) => {
+            if (err instanceof mongoose.Error.ValidationError) {
+              res.json({ errorMessage: "test error" });
+            } else if (err.code === 11000) {
+              res.json({
+                errorMessage:
+                  "Username and email need to be unique. Either username or email is already used.",
+              });
+            } else {
+              next(err);
+            }
+          });
+      }
       return User.create({
         username,
         email,
